@@ -30,7 +30,8 @@ Yp     - Data matrix Y projected.
 
 ## Optional parameters
 snr_input - (float) signal to noise ratio (dB)
-v         - [True | False]
+
+verbose   - [True | False]
 
 # Requirements
 
