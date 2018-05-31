@@ -118,7 +118,7 @@ def vca(Y,R,verbose = True,snr_input = 0):
       print("... Select proj. to R-1")
              
     d = R
-    Ud  = splin.svd(sp.dot(Y_o,Y_o.T)/float(N))[0][:,:d] # computes the p-projection matrix 
+    Ud  = splin.svd(sp.dot(Y,Y.T)/float(N))[0][:,:d] # computes the p-projection matrix 
                 
     x_p = sp.dot(Ud.T,Y)
     Yp =  sp.dot(Ud,x_p[:d,:])      # again in dimension L (note that x_p has no null mean)
