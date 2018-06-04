@@ -96,7 +96,7 @@ def vca(Y,R,verbose = True,snr_input = 0):
 
   if SNR < SNR_th:
     if verbose:
-      print("... Select the projective proj.")
+      print("... Select proj. to R-1")
                 
       d = R-1
       if snr_input==0: # it means that the projection is already computed
@@ -115,7 +115,7 @@ def vca(Y,R,verbose = True,snr_input = 0):
       y = sp.vstack(( x, c*sp.ones((1,N)) ))
   else:
     if verbose:
-      print("... Select proj. to R-1")
+      print("... Select the projective proj.")
              
     d = R
     Ud  = splin.svd(sp.dot(Y,Y.T)/float(N))[0][:,:d] # computes the p-projection matrix 
@@ -125,7 +125,7 @@ def vca(Y,R,verbose = True,snr_input = 0):
                 
     x =  sp.dot(Ud.T,Y)
     u = sp.mean(x,axis=1,keepdims=True)        #equivalent to  u = Ud.T * r_m
-    y =  x / sum( x * u)
+    y =  x / sp.dot(u.T,x)
 
  
   #############################################
@@ -139,7 +139,7 @@ def vca(Y,R,verbose = True,snr_input = 0):
   for i in range(R):
     w = sp.random.rand(R,1);   
     f = w - sp.dot(A,sp.dot(splin.pinv(A),w))
-    f = f / sp.sqrt(sum(f**2))
+    f = f / splin.norm(f)
       
     v = sp.dot(f.T,y)
 
