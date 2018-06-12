@@ -17,7 +17,7 @@ Ae, indice, Yp = vca(Y,R,verbose = True,snr_input = 0)
      each pixel is a linear mixture of R endmembers
      signatures Y = M x s, where s = gamma x alfa
      gamma is a illumination perturbation factor and
-     alfa are the abundance fractions of each endmember.
+     alfa are the abundance fractions of each endmember. NB: Y has to be a numpy array
      
  R - positive integer number of endmembers in the scene
 
