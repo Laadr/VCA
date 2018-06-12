@@ -65,6 +65,7 @@ def vca(Y,R,verbose = True,snr_input = 0):
 
   [L, N]=Y.shape   # L number of bands (channels), N number of pixels
        
+  R = int(R)
   if (R<0 or R>L):  
     sys.exit('ENDMEMBER parameter must be integer between 1 and L')
         
