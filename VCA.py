@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
-import scipy as sp
-import scipy.linalg as splin
+import numpy as np
 
 
 #############################################
@@ -13,9 +12,9 @@ def estimate_snr(Y,r_m,x):
   [L, N] = Y.shape           # L number of bands (channels), N number of pixels
   [p, N] = x.shape           # p number of endmembers (reduced dimension)
   
-  P_y     = sp.sum(Y**2)/float(N)
-  P_x     = sp.sum(x**2)/float(N) + sp.sum(r_m**2)
-  snr_est = 10*sp.log10( (P_x - p/L*P_y)/(P_y - P_x) )
+  P_y     = np.sum(Y**2)/float(N)
+  P_x     = np.sum(x**2)/float(N) + np.sum(r_m**2)
+  snr_est = 10*np.log10( (P_x - p/L*P_y)/(P_y - P_x) )
 
   return snr_est
 
@@ -74,10 +73,10 @@ def vca(Y,R,verbose = True,snr_input = 0):
   #############################################
 
   if snr_input==0:
-    y_m = sp.mean(Y,axis=1,keepdims=True)
+    y_m = np.mean(Y,axis=1,keepdims=True)
     Y_o = Y - y_m           # data with zero-mean
-    Ud  = splin.svd(sp.dot(Y_o,Y_o.T)/float(N))[0][:,:R]  # computes the R-projection matrix 
-    x_p = sp.dot(Ud.T, Y_o)                 # project the zero-mean data onto p-subspace
+    Ud  = np.linalg.svd(np.dot(Y_o,Y_o.T)/float(N))[0][:,:R]  # computes the R-projection matrix 
+    x_p = np.dot(Ud.T, Y_o)                 # project the zero-mean data onto p-subspace
 
     SNR = estimate_snr(Y,y_m,x_p);
     
@@ -88,7 +87,7 @@ def vca(Y,R,verbose = True,snr_input = 0):
     if verbose:
       print("input SNR = {}[dB]\n".format(SNR))
 
-  SNR_th = 15 + 10*sp.log10(R)
+  SNR_th = 15 + 10*np.log10(R)
          
   #############################################
   # Choosing Projective Projection or 
@@ -103,48 +102,48 @@ def vca(Y,R,verbose = True,snr_input = 0):
       if snr_input==0: # it means that the projection is already computed
         Ud = Ud[:,:d]
       else:
-        y_m = sp.mean(Y,axis=1,keepdims=True)
+        y_m = np.mean(Y,axis=1,keepdims=True)
         Y_o = Y - y_m  # data with zero-mean 
          
-        Ud  = splin.svd(sp.dot(Y_o,Y_o.T)/float(N))[0][:,:d]  # computes the p-projection matrix 
-        x_p =  sp.dot(Ud.T,Y_o)                 # project thezeros mean data onto p-subspace
+        Ud  = np.linalg.svd(np.dot(Y_o,Y_o.T)/float(N))[0][:,:d]  # computes the p-projection matrix 
+        x_p =  np.dot(Ud.T,Y_o)                 # project thezeros mean data onto p-subspace
                 
-      Yp =  sp.dot(Ud,x_p[:d,:]) + y_m      # again in dimension L
+      Yp =  np.dot(Ud,x_p[:d,:]) + y_m      # again in dimension L
                 
       x = x_p[:d,:] #  x_p =  Ud.T * Y_o is on a R-dim subspace
-      c = sp.amax(sp.sum(x**2,axis=0))**0.5
-      y = sp.vstack(( x, c*sp.ones((1,N)) ))
+      c = np.amax(sp.sum(x**2,axis=0))**0.5
+      y = np.vstack(( x, c*np.ones((1,N)) ))
   else:
     if verbose:
       print("... Select the projective proj.")
              
     d = R
-    Ud  = splin.svd(sp.dot(Y,Y.T)/float(N))[0][:,:d] # computes the p-projection matrix 
+    Ud  = np.linalg.svd(np.dot(Y,Y.T)/float(N))[0][:,:d] # computes the p-projection matrix 
                 
-    x_p = sp.dot(Ud.T,Y)
-    Yp =  sp.dot(Ud,x_p[:d,:])      # again in dimension L (note that x_p has no null mean)
+    x_p = np.dot(Ud.T,Y)
+    Yp =  np.dot(Ud,x_p[:d,:])      # again in dimension L (note that x_p has no null mean)
                 
-    x =  sp.dot(Ud.T,Y)
-    u = sp.mean(x,axis=1,keepdims=True)        #equivalent to  u = Ud.T * r_m
-    y =  x / sp.dot(u.T,x)
+    x =  np.dot(Ud.T,Y)
+    u = np.mean(x,axis=1,keepdims=True)        #equivalent to  u = Ud.T * r_m
+    y =  x / np.dot(u.T,x)
 
  
   #############################################
   # VCA algorithm
   #############################################
 
-  indice = sp.zeros((R),dtype=int)
-  A = sp.zeros((R,R))
+  indice = np.zeros((R),dtype=int)
+  A = np.zeros((R,R))
   A[-1,0] = 1
 
   for i in range(R):
-    w = sp.random.rand(R,1);   
-    f = w - sp.dot(A,sp.dot(splin.pinv(A),w))
-    f = f / splin.norm(f)
+    w = np.random.rand(R,1);   
+    f = w - np.dot(A,np.dot(np.linalg.pinv(A),w))
+    f = f / np.linalg.norm(f)
       
-    v = sp.dot(f.T,y)
+    v = np.dot(f.T,y)
 
-    indice[i] = sp.argmax(sp.absolute(v))
+    indice[i] = np.argmax(np.absolute(v))
     A[:,i] = y[:,indice[i]]        # same as x(:,indice(i))
 
   Ae = Yp[:,indice]
