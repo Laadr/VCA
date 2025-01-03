@@ -125,7 +125,7 @@ def vca(Y,R,verbose = True,snr_input = 0):
                 
     x =  np.dot(Ud.T,Y)
     u = np.mean(x,axis=1,keepdims=True)        #equivalent to  u = Ud.T * r_m
-    y =  x / np.dot(u.T,x)
+    y =  x / ( np.dot(u.T,x) + 1e-7 )
 
  
   #############################################
