@@ -111,7 +111,7 @@ def vca(Y,R,verbose = True,snr_input = 0):
       Yp =  np.dot(Ud,x_p[:d,:]) + y_m      # again in dimension L
                 
       x = x_p[:d,:] #  x_p =  Ud.T * Y_o is on a R-dim subspace
-      c = np.amax(sp.sum(x**2,axis=0))**0.5
+      c = np.amax(np.sum(x**2,axis=0))**0.5
       y = np.vstack(( x, c*np.ones((1,N)) ))
   else:
     if verbose:
