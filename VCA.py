@@ -98,21 +98,21 @@ def vca(Y,R,verbose = True,snr_input = 0):
     if verbose:
       print("... Select proj. to R-1")
                 
-      d = R-1
-      if snr_input==0: # it means that the projection is already computed
-        Ud = Ud[:,:d]
-      else:
-        y_m = np.mean(Y,axis=1,keepdims=True)
-        Y_o = Y - y_m  # data with zero-mean 
-         
-        Ud  = np.linalg.svd(np.dot(Y_o,Y_o.T)/float(N))[0][:,:d]  # computes the p-projection matrix 
-        x_p =  np.dot(Ud.T,Y_o)                 # project thezeros mean data onto p-subspace
-                
-      Yp =  np.dot(Ud,x_p[:d,:]) + y_m      # again in dimension L
-                
-      x = x_p[:d,:] #  x_p =  Ud.T * Y_o is on a R-dim subspace
-      c = np.amax(sp.sum(x**2,axis=0))**0.5
-      y = np.vstack(( x, c*np.ones((1,N)) ))
+    d = R-1
+    if snr_input==0: # it means that the projection is already computed
+      Ud = Ud[:,:d]
+    else:
+      y_m = np.mean(Y,axis=1,keepdims=True)
+      Y_o = Y - y_m  # data with zero-mean 
+        
+      Ud  = np.linalg.svd(np.dot(Y_o,Y_o.T)/float(N))[0][:,:d]  # computes the p-projection matrix 
+      x_p =  np.dot(Ud.T,Y_o)                 # project thezeros mean data onto p-subspace
+              
+    Yp =  np.dot(Ud,x_p[:d,:]) + y_m      # again in dimension L
+              
+    x = x_p[:d,:] #  x_p =  Ud.T * Y_o is on a R-dim subspace
+    c = np.amax(np.sum(x**2,axis=0))**0.5
+    y = np.vstack(( x, c*np.ones((1,N)) ))
   else:
     if verbose:
       print("... Select the projective proj.")
