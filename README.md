@@ -38,7 +38,7 @@ verbose   - [True | False]
 Scipy needs to be installed.
 
 # Authors
-Author: Adrien Lagrange (adrien.lagrange@enseeiht.fr)
+Author: Adrien Lagrange (ad.lagrange@gmail.com)
 
 This code is a translation of a matlab code provided by Jose Nascimento (zen@isel.pt) and Jose Bioucas Dias (bioucas@lx.it.pt) available at http://www.lx.it.pt/~bioucas/code.htm under a non-specified Copyright (c)
 
