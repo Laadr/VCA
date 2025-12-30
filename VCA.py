@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import sys
 import numpy as np
 
 
@@ -60,13 +59,13 @@ def vca(Y,R,verbose = True,snr_input = 0):
   # Initializations
   #############################################
   if len(Y.shape)!=2:
-    sys.exit('Input data must be of size L (number of bands i.e. channels) by N (number of pixels)')
+    raise ValueError(f'Input data must be of size L (number of bands i.e. channels) by N (number of pixels): {Y.shape} is not valid')
 
   [L, N]=Y.shape   # L number of bands (channels), N number of pixels
        
   R = int(R)
   if (R<0 or R>L):  
-    sys.exit('ENDMEMBER parameter must be integer between 1 and L')
+    raise ValueError(f'ENDMEMBER parameter must be integer between 1 and {L}: {R} is not valid')
         
   #############################################
   # SNR Estimates
